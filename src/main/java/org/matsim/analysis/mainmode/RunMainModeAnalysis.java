@@ -3,6 +3,7 @@ package org.matsim.analysis.mainmode;
 import org.apache.commons.csv.CSVFormat;
 import org.matsim.core.events.EventsUtils;
 import org.matsim.core.events.handler.EventHandler;
+import org.matsim.core.utils.gis.ShapeFileReader;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -14,9 +15,9 @@ public class RunMainModeAnalysis {
 private static final String workDir = "C:\\Users\\anton\\IdeaProjects\\Hausaufgaben\\HA2\\Analysis\\";
 private static final String eventsfile = workDir+"output\\events.xml.gz";
 private static final String outputCSV = workDir+"analysis-output.csv";
-
+private static final String shapeFile = workDir + "\\shapefiles\\bezirksgrenzen.shp";
     public static void main(String[] args) {
-
+        public var features = ShapeFileReader.getAllFeatures(shapeFile);
         var manager = EventsUtils.createEventsManager();
         var handler = new org.matsim.analysis.mainmode.MainModeHandler();
         manager.addHandler(handler);

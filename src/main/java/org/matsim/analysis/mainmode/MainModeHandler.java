@@ -20,17 +20,16 @@ import org.matsim.core.utils.gis.ShapeFileReader;
 import java.util.*;
 
 public class MainModeHandler implements TransitDriverStartsEventHandler, PersonDepartureEventHandler, ActivityEndEventHandler {
+
     private static final String workDir = "C:\\Users\\anton\\IdeaProjects\\Hausaufgaben\\HA2\\Analysis";
     private static final String shapeFile = workDir + "\\shapefiles\\bezirksgrenzen.shp";
-    private static final CoordinateTransformation transformation = TransformationFactory.getCoordinateTransformation("EPSG:25832", "EPSG:3857");
+    private static final CoordinateTransformation transformation = TransformationFactory.getCoordinateTransformation("EPSG:31468", "EPSG:3857");
     private static final String Land_schluessel = "11";
     private static final String Gemeinde_s = "006";
     private static final List<String> modes = List.of(TransportMode.walk, TransportMode.bike, TransportMode.ride, TransportMode.car, TransportMode.pt, TransportMode.airplane);
     private final Set<Id<Person>> transitDrivers = new HashSet<>();
     private final Map<Id<Person>, List<String>> personTrips = new HashMap<>();
     private final Map<Id<Person>, List<Coord>> personCoords = new HashMap<>();
-    private static int debugger = 0;
-
     public Map<Id<Person>, List<String>> getPersonTrips() {
         return personTrips;
     }
@@ -48,7 +47,7 @@ public class MainModeHandler implements TransitDriverStartsEventHandler, PersonD
         if (insideAreaOfInterest(transformation.transform(endCoord)) == false) return;
 
         personTrips.computeIfAbsent(e.getPersonId(), id -> new ArrayList<>()).add("");
-    }
+        }
 
     @Override
     public void handleEvent(PersonDepartureEvent e) {
@@ -94,7 +93,7 @@ public class MainModeHandler implements TransitDriverStartsEventHandler, PersonD
 
     private boolean insideAreaOfInterest(Coord coord) {
         var features = ShapeFileReader.getAllFeatures(shapeFile);
-        var geometry = features.stream().filter(feature -> feature.getAttribute("Land_schlu").equals(Land_schluessel))
+        var geometry = features.stream().filter(feature -> feature.getAttribute("Gemeinde_s").equals(Gemeinde_s))
                 .map(feature -> (Geometry) feature.getDefaultGeometry())
                 .findAny()
                 .orElseThrow();
